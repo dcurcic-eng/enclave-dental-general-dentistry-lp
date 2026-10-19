@@ -142,38 +142,13 @@ body {
 @media (prefers-reduced-motion: no-preference) {
   .btn { transition: background-color .3s var(--ease), color .3s var(--ease), border-color .3s var(--ease), box-shadow .3s var(--ease), scale .1s var(--ease-out); }
 }
-.btn[aria-busy="true"] { pointer-events: none; }
-.btn-spinner { inline-size: 16px; block-size: 16px; border: 2px solid currentColor; border-inline-end-color: transparent; border-radius: 50%; }
 
 /* ---------- Form fields (shared by hero + booking) ---------- */
 .lead { display: flex; flex-direction: column; }
 .lead__head { display: flex; flex-direction: column; gap: calc(8 * var(--px)); }
 .lead__title { font-family: var(--f-head); font-weight: 400; font-size: calc(32 * var(--fpx)); line-height: 1.05; color: var(--slate); }
 .lead__sub { color: var(--gray); font-size: calc(15 * var(--fpx)); line-height: 1.5; }
-.row2 { display: flex; gap: calc(12 * var(--px)); }
-.row2 > * { flex: 1; }
-.field { display: flex; flex-direction: column; gap: calc(6 * var(--px)); }
-.field label { font-size: calc(13 * var(--fpx)); font-weight: 600; line-height: normal; color: var(--slate); }
-.field input, .field textarea {
-  inline-size: 100%; block-size: calc(48 * var(--px));
-  border: 1px solid var(--line-strong); border-radius: calc(4 * var(--px));
-  background: var(--white); color: var(--ink);
-  font-size: calc(15 * var(--fpx)); line-height: normal; padding: 0 calc(16 * var(--px));
-  transition: border-color .15s var(--ease), box-shadow .15s var(--ease);
-}
-.field textarea { block-size: calc(96 * var(--px)); padding: calc(14 * var(--px)) calc(16 * var(--px)); line-height: 1.5; resize: none; display: block; }
-.field ::placeholder { color: var(--gray); opacity: 1; }
-.field input:focus-visible, .field textarea:focus-visible {
-  outline: 2px solid transparent;
-  border-color: var(--gold);
-  box-shadow: 0 0 0 3px color-mix(in oklch, var(--gold) 25%, transparent);
-}
-.field input:user-invalid { border-color: oklch(55% 0.17 28); }
-.lead__done {
-  display: none; font-size: calc(15 * var(--fpx)); line-height: 1.5; color: var(--slate);
-  background: color-mix(in oklch, var(--gold) 12%, transparent); border-radius: calc(6 * var(--px)); padding: calc(14 * var(--px)) calc(16 * var(--px));
-}
-.lead.is-sent .lead__done { display: block; }
+.lead iframe { display: block; inline-size: 100%; border: 0; }
 
 /* ======================================================
    HERO
@@ -181,11 +156,12 @@ body {
 .hero {
   position: relative;
   display: grid;
-  grid-template-columns: calc(80 * var(--px)) 1fr calc(80 * var(--px)) calc(400 * var(--px)) calc(80 * var(--px));
+  grid-template-columns: calc(80 * var(--px)) 1fr calc(80 * var(--px)) max(calc(440 * var(--px)), 400px) calc(80 * var(--px));
   grid-template-rows: calc(88 * var(--px)) minmax(0, 1fr) auto;
-  /* The hero is always exactly one screen tall */
-  block-size: 100vh;
-  block-size: 100svh;
+  /* The hero is at least one screen tall, and grows on short screens so the
+     embedded form (its text does not scale) is never cut off */
+  min-block-size: 100vh;
+  min-block-size: 100svh;
   color: var(--white);
   overflow: clip;
   isolation: isolate;
@@ -235,9 +211,9 @@ body {
 
 .hero__form {
   grid-column: 4; grid-row: 2; align-self: start;
-  margin-block: calc(20 * var(--px)) calc(32 * var(--px));
+  margin-block: calc(8 * var(--px)) calc(16 * var(--px));
   background: var(--white); color: var(--slate);
-  border-radius: calc(16 * var(--px)); padding: calc(32 * var(--px)); gap: calc(16 * var(--px));
+  border-radius: max(calc(16 * var(--px)), 12px); padding: max(calc(32 * var(--px)), 28px); gap: calc(16 * var(--px));
   box-shadow: 0 calc(16 * var(--px)) calc(48 * var(--px)) oklch(0% 0 none / 0.25);
   scroll-margin-block-start: 24px;
 }
@@ -531,8 +507,6 @@ body {
 }
 .book__form .lead__title { font-size: calc(38 * var(--fpx)); line-height: 1; }
 .book__form .lead__head { gap: calc(18 * var(--px)); }
-.book__form .field input, .book__form .field textarea { background: var(--cream); padding-inline: calc(14 * var(--px)); }
-.book__form .field textarea { padding: calc(14 * var(--px)); }
 .book__col { flex: 1; display: flex; flex-direction: column; gap: calc(24 * var(--px)); padding-block: calc(8 * var(--px)); }
 .h3--38 { font-family: var(--f-head); font-weight: 400; font-size: calc(38 * var(--fpx)); line-height: 1; }
 .hours { border-block-end: 1px solid var(--line-strong); }
@@ -680,8 +654,6 @@ body {
   .emergency__body { flex-basis: 100%; font-size: 14px; }
   .emergency .btn { flex: 1 1 auto; }
 
-  .field input, .field textarea { font-size: max(16px, 1rem); }
-
   /* trust: marquee row + badge */
   .trust { flex-direction: column; align-items: stretch; padding: 24px 0; gap: 16px; }
   .trust__badge { border: 0; padding: 0; margin-inline: var(--gutter); flex-wrap: wrap; }
@@ -770,7 +742,6 @@ body {
   .foot__bottom { flex-direction: column-reverse; align-items: stretch; text-align: center; }
 }
 @media (width < 560px) {
-  .row2 { flex-direction: column; }
   .emergency .btn { inline-size: 100%; }
 }
 /* short phone screens and landscape phones: trim the hero so it still fits one screen */
@@ -834,6 +805,7 @@ body {
   .rcard.is-active .stars .i { translate: 0 calc(-2 * var(--px)); scale: 1.15; }
 }
 </style>
+<script type="text/javascript" src="https://aeva-static-bucket.s3.amazonaws.com/static/js/embedAevaScript.js"></script>
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
@@ -885,7 +857,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <a class="nav__phone" href="tel:+14483275722"><svg class="i" aria-hidden="true"><use href="#i-phone"/></svg>(448) 327-5722</a>
       <a class="btn btn--primary btn--sm" href="#visit">Schedule consultation</a>
     </nav>
-    <a class="btn btn--primary topbar__book" href="#hero-form" data-focus="#hf-first">Book</a>
+    <a class="btn btn--primary topbar__book" href="#hero-form">Book</a>
   </header>
 
   <div class="hero__copy">
@@ -896,27 +868,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="hero__bottom" data-hero-bottom>
       <p class="hero__sub">Meet Dr. Shachi Shah for a gentle consultation in Lake Mary. Same-day and weekend visits.</p>
       <div class="hero__ctas">
-        <a class="btn btn--primary" href="#hero-form" data-focus="#hf-first">Schedule your consultation</a>
+        <a class="btn btn--primary" href="#hero-form">Schedule your consultation</a>
         <a class="btn btn--ghost" href="tel:+14483275722"><svg class="i" aria-hidden="true"><use href="#i-phone"/></svg>Call (448) 327-5722</a>
       </div>
     </div>
   </div>
 
-  <form class="lead hero__form" id="hero-form" data-hero-form novalidate aria-labelledby="hf-title">
+  <div class="lead hero__form" id="hero-form" data-hero-form aria-labelledby="hf-title">
     <div class="lead__head">
       <h2 class="lead__title" id="hf-title">SCHEDULE YOUR CONSULTATION</h2>
       <p class="lead__sub">Leave your details. We'll call you back to confirm a time.</p>
     </div>
-    <div class="row2">
-      <div class="field"><label for="hf-first">First name</label><input id="hf-first" name="first_name" autocomplete="given-name" placeholder="First name" required></div>
-      <div class="field"><label for="hf-last">Last name</label><input id="hf-last" name="last_name" autocomplete="family-name" placeholder="Last name"></div>
-    </div>
-    <div class="field"><label for="hf-phone">Phone</label><input id="hf-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(000) 000-0000" required></div>
-    <div class="field"><label for="hf-email">Email</label><input id="hf-email" name="email" type="email" autocomplete="email" placeholder="you@email.com"></div>
-    <div class="field"><label for="hf-desc">Short description of the issue</label><textarea id="hf-desc" name="message" placeholder="Tell us what's going on, like a chipped tooth or a checkup"></textarea></div>
-    <button class="btn btn--primary btn--block" type="submit">Schedule your consultation</button>
-    <p class="lead__done" role="status" aria-live="polite">Thank you. We'll call you shortly to confirm a time.</p>
-  </form>
+    <iframe src="https://api.aevadigital.com/api/v1/forms/618/form-view/" title="MyForm" width="100%"
+      onload="onPageLoad('production')" id="myFormEmbed" frameborder="0"></iframe>
+  </div>
 
   <div class="emergency" data-hero-bar>
     <div class="emergency__left">
@@ -1165,21 +1130,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <h2 class="h2 h2--60" id="bk-h">PICK A TIME THAT WORKS. WE'LL TAKE IT FROM THERE.</h2>
   </div>
   <div class="book__cols" data-card-stagger="0.12">
-    <form class="lead book__form" id="book-form" novalidate aria-labelledby="bf-title">
+    <div class="lead book__form" id="book-form" aria-labelledby="bf-title">
       <div class="lead__head">
         <h3 class="lead__title" id="bf-title">SCHEDULE YOUR CONSULTATION</h3>
         <p class="lead__sub">Send your details and we'll call you back to confirm a time.</p>
       </div>
-      <div class="row2">
-        <div class="field"><label for="bf-first">First name</label><input id="bf-first" name="first_name" autocomplete="given-name" placeholder="First name" required></div>
-        <div class="field"><label for="bf-last">Last name</label><input id="bf-last" name="last_name" autocomplete="family-name" placeholder="Last name"></div>
-      </div>
-      <div class="field"><label for="bf-phone">Phone</label><input id="bf-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(000) 000-0000" required></div>
-      <div class="field"><label for="bf-email">Email</label><input id="bf-email" name="email" type="email" autocomplete="email" placeholder="you@email.com"></div>
-      <div class="field"><label for="bf-desc">Short description of the issue</label><textarea id="bf-desc" name="message" placeholder="Tell us what's going on, like a chipped tooth or a checkup"></textarea></div>
-      <button class="btn btn--primary btn--block" type="submit">Schedule your consultation</button>
-      <p class="lead__done" role="status" aria-live="polite">Thank you. We'll call you shortly to confirm a time.</p>
-    </form>
+      <iframe src="https://api.aevadigital.com/api/v1/forms/618/form-view/" title="MyForm" width="100%"
+        onload="onPageLoad('production')" id="myFormEmbed" frameborder="0"></iframe>
+    </div>
 
     <div class="book__col">
       <h3 class="h3--38">OFFICE HOURS</h3>
@@ -1364,35 +1322,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     v.setAttribute('aria-label', 'Patient testimonial video');
     card.appendChild(v); card.classList.add('is-playing');
     v.play()?.catch(() => {}); v.focus();
-  });
-
-  /* ---------- Lead forms: validation + loading/success lifecycle (guide 11.3) ---------- */
-  $$('form.lead').forEach(form => {
-    form.addEventListener('submit', async e => {
-      e.preventDefault();
-      if (!form.checkValidity()) { form.reportValidity(); return; }
-      const btn = $('button[type=submit]', form);
-      const label = btn.innerHTML;
-      btn.setAttribute('aria-busy', 'true');
-      btn.innerHTML = '<span class="btn-spinner" aria-hidden="true"></span><span class="sr-only">Sending</span>';
-      const spin = hasGsap ? gsap.to($('.btn-spinner', btn), { rotation: 360, duration: 0.8, ease: 'none', repeat: -1 }) : null;
-      try {
-        const endpoint = form.dataset.endpoint; // set data-endpoint="https://..." to post leads
-        if (endpoint) await fetch(endpoint, { method: 'POST', body: new FormData(form) });
-        else await new Promise(r => setTimeout(r, 700));
-        spin?.kill();
-        btn.removeAttribute('aria-busy');
-        btn.innerHTML = '<span aria-hidden="true">&#10003;</span><span class="sr-only">Sent</span>';
-        if (hasGsap) gsap.from(btn.firstChild, { scale: 0, duration: 0.25, ease: 'back.out(1.7)' });
-        form.classList.add('is-sent');
-        if (hasGsap && !REDUCE) gsap.fromTo($('.lead__done', form), { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.4, ease: 'power3.out' });
-        form.reset();
-        setTimeout(() => { btn.innerHTML = label; }, 4000);
-      } catch (err) {
-        spin?.kill(); btn.removeAttribute('aria-busy'); btn.innerHTML = label;
-        alert('Sorry, that did not send. Please call (448) 327-5722.');
-      }
-    });
   });
 
   if (!hasGsap) return;
